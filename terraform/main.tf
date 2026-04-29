@@ -28,6 +28,13 @@ resource "aws_security_group" "devops_sg" {
     cidr_blocks = ["0.0.0.0/0"] # HTTPS
   }
 
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Jenkins
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -161,6 +168,15 @@ resource "aws_instance" "devops_server" {
               cd /opt/infrastructure/app-a && sudo docker-compose up -d
               cd /opt/infrastructure/app-b-backend && sudo docker-compose up -d
               cd /opt/infrastructure/app-b-frontend && sudo docker-compose up -d
+
+              # 8. Start Jenkins
+              sudo docker run -d --name jenkins \
+                --restart always \
+                -p 8080:8080 -p 50000:50000 \
+                -v jenkins_home:/var/jenkins_home \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                --user root \
+                jenkins/jenkins:lts
               EOF
 
 }
