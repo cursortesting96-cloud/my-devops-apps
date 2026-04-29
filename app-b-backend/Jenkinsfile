@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = "your-registry/app-b-backend:${env.BUILD_ID}"
+        COMPOSE_DIR = "/opt/infrastructure/app-b-backend" // Location on Server
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME} ."
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Update the docker-compose file image version on remote server
+                sh "sed -i 's|image: your-registry/app-b-backend:.*|image: ${IMAGE_NAME}|g' ${COMPOSE_DIR}/docker-compose.yml"
+                
+                // Pull and recreate ONLY this specific service with zero downtime (if using Traefik)
+                sh "cd ${COMPOSE_DIR} && docker-compose up -d"
+            }
+        }
+        stage('Clean') {
+            steps {
+                sh "docker system prune -f"
+            }
+        }
+    }
+}

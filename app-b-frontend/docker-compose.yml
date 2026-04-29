@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app-b-ui:
+    build: .
+    container_name: app-b-frontend
+    restart: always
+    env_file: .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app-b-ui.rule=Host(`app-b.test`)"
+      - "traefik.http.routers.app-b-ui.entrypoints=web"
+      - "traefik.http.services.app-b-ui.loadbalancer.server.port=3000"
+    networks:
+      - web-gateway
+
+networks:
+  web-gateway:
+    external: true

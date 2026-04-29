@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app-a-web:
+    build: .
+    container_name: app-a-web
+    restart: always
+    env_file: .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app-a.rule=Host(`app-a.test`)"
+      - "traefik.http.routers.app-a.entrypoints=web"
+      - "traefik.http.services.app-a.loadbalancer.server.port=8000"
+    networks:
+      - web-gateway
+      - app-a-internal
+
+  app-a-db:
+    image: postgres:15
+    container_name: app-a-db
+    restart: always
+    environment:
+      - POSTGRES_DB=app_a
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminpass
+    volumes:
+      - app-a-db-data:/var/lib/postgresql/data
+    networks:
+      - app-a-internal
+
+volumes:
+  app-a-db-data:
+
+networks:
+  web-gateway:
+    external: true
+  app-a-internal:
+    driver: bridge

@@ -1,0 +1,37 @@
+
+cursor testing <cursortesting96@gmail.com>
+Thu, Apr 16, 5:46 AM (1 day ago)
+to me
+
+Summary
+# DevOps Engineer — Infrastructure Decoupling & Deployment Pipeline Setup
+
+## About the Role
+
+We're looking for an experienced DevOps engineer to restructure our existing server infrastructure and set up clean, independent deployment pipelines for two web applications. This is a focused, project-based engagement with a clear scope and deliverables.
+
+## Current State
+
+Our server currently hosts one production application and needs to support a second:
+
+- **Application A** — A Django + Bootstrap monolith (backend and frontend in one codebase). Fully deployed and running in production.
+- **Application B** — A Django backend + Next.js frontend (separate services that communicate via API). Not yet deployed.
+
+The current infrastructure uses **Jenkins**, **Nginx**, **Docker**, and **Traefik** (for SSL certificates). However, Nginx and Traefik are tightly coupled within Application A's Docker setup. This means any deployment changes to Application B require modifications to Application A's configuration — and sometimes a full redeployment.
+
+## What We Need
+
+Restructure the infrastructure into **four independent deployment pipelines**:
+
+1. **Application A** — Keep it fully functional with its own standalone pipeline (no disruption to production).
+2. **Shared Gateway Service** — Extract Nginx and Traefik from Application A into an independent, shared reverse proxy/gateway service that routes traffic to both applications and manages SSL certificates.
+3. **Application B — Backend** — A separate deployment pipeline for the Django API service.
+4. **Application B — Frontend** — A separate deployment pipeline for the Next.js UI service.
+
+## Key Objectives
+
+- Decouple Nginx and Traefik from Application A so they operate as a shared infrastructure layer.
+- Ensure deploying Application B never requires touching or redeploying Application A.
+- Each of the four components should be independently deployable.
+- Maintain zero downtime for Application A (currently in production) throughout the migration.
+- Clean, well-documented Docker Compose or orchestration setup.
