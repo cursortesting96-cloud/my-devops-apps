@@ -15,8 +15,8 @@ pipeline {
                 // Update the docker-compose file image version on remote server
                 sh "sed -i 's|image:.*|image: ${IMAGE_NAME}|g' ${COMPOSE_DIR}/docker-compose.yml"
                 
-                // Ensure .env file exists
-                sh "cd ${COMPOSE_DIR} && cp -n .env.example .env || true"
+                // Ensure .env file exists and is updated
+                sh "cd ${COMPOSE_DIR} && cp -f .env.example .env || true"
                 
                 // Pull and recreate ONLY this specific service with zero downtime (if using Traefik)
                 sh "cd ${COMPOSE_DIR} && docker-compose up -d"
