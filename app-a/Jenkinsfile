@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "talhafayyaz/app-a:${env.BUILD_ID}"
-        COMPOSE_DIR = "app-a" // Workspace location
+        COMPOSE_DIR = "app-a"
     }
     stages {
         stage('Build') {
@@ -14,6 +14,9 @@ pipeline {
             steps {
                 // Update the docker-compose file image version on remote server
                 sh "sed -i 's|image:.*|image: ${IMAGE_NAME}|g' ${COMPOSE_DIR}/docker-compose.yml"
+                
+                // Ensure .env file exists
+                sh "cd ${COMPOSE_DIR} && cp -n .env.example .env || true"
                 
                 // Pull and recreate ONLY this specific service with zero downtime (if using Traefik)
                 sh "cd ${COMPOSE_DIR} && docker-compose up -d"
