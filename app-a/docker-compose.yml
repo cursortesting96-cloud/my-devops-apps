@@ -3,6 +3,7 @@ version: '3.8'
 services:
   app-a-web:
     build: .
+    image: talhafayyaz/app-a:latest
     container_name: app-a-web
     restart: always
     env_file: .env
