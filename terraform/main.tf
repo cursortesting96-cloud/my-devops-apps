@@ -169,7 +169,7 @@ resource "aws_instance" "devops_server" {
               cd /opt/infrastructure/app-b-backend && sudo docker-compose up -d
               cd /opt/infrastructure/app-b-frontend && sudo docker-compose up -d
 
-              # 8. Start Jenkins
+              # 8. Start Jenkins and Install Docker CLI inside it
               sudo docker run -d --name jenkins \
                 --restart always \
                 -p 8080:8080 -p 50000:50000 \
@@ -177,6 +177,14 @@ resource "aws_instance" "devops_server" {
                 -v /var/run/docker.sock:/var/run/docker.sock \
                 --user root \
                 jenkins/jenkins:lts
+
+              # Wait for Jenkins to initialize then install Docker CLI
+              sleep 30
+              sudo docker exec -u 0 jenkins apt-get update
+              sudo docker exec -u 0 jenkins apt-get install -y docker.io
+              sudo docker exec -u 0 jenkins curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo docker exec -u 0 jenkins chmod +x /usr/local/bin/docker-compose
+
               EOF
 
 }
