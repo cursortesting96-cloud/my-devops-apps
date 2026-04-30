@@ -13,7 +13,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Update the docker-compose file image version on remote server
-                sh "sed -i 's|image:.*|image: ${IMAGE_NAME}|g' ${COMPOSE_DIR}/docker-compose.yml"
+                // Update ONLY the app-a-web image version
+                sh "sed -i '/app-a-web:/,/image:/ s|image:.*|image: ${IMAGE_NAME}|' ${COMPOSE_DIR}/docker-compose.yml"
                 
                 // Ensure .env file exists and is updated
                 sh "cd ${COMPOSE_DIR} && cp -f .env.example .env || true"
