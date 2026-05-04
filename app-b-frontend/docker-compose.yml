@@ -11,6 +11,7 @@ services:
       - "traefik.http.routers.app-b-ui.rule=Host(`app-b.test`)"
       - "traefik.http.routers.app-b-ui.entrypoints=web"
       - "traefik.http.services.app-b-ui.loadbalancer.server.port=3000"
+      - "traefik.docker.network=web-gateway"
     networks:
       - web-gateway
 
