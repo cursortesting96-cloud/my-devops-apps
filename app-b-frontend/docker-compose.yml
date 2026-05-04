@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app-b-ui:
-    build: .
+    image: talhafayyaz/app-b-frontend:latest
     container_name: app-b-frontend
     restart: always
     env_file: .env
