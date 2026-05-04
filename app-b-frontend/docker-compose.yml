@@ -5,7 +5,6 @@ services:
     image: talhafayyaz/app-b-frontend:latest
     container_name: app-b-frontend
     restart: always
-    env_file: .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app-b-ui.rule=Host(`app-b.test`)"
